@@ -8,7 +8,10 @@ function organize(uber_details, alternatives, input) {
 	var longitude = alternatives.longitude;
 	var destination = input.destination;
 
-	var bus, bike, walk, car;
+	var bus ='';
+	var bike = '';
+	var walk = '';
+	var car = '';
 
 	if (alternatives.bus != null) {
 		bus = {
