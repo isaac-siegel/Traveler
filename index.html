@@ -18,9 +18,9 @@
     <!--</div>-->
 
     <div data-role="main" class="ui-content">
-        <h1>Traveler</h1>
+        <h1>travelr</h1>
         <i class="fa fa-map-marker fa-5x"></i>
-        <a href="#pagetwo" class="ui-btn">Take Me Places!</a>
+        <a href="#pagetwo" class="ui-btn" data-transition="slide" data-inline="true">Take Me Places!</a>
     </div>
 
     <!--<div data-role="footer">-->
@@ -36,12 +36,51 @@
     <div data-role="main" class="ui-content">
         <h1>Where do you want to go?</h1>
 
-        <a href="#pageone" class="ui-btn">Go todsfjsdf Page One</a>
+        <a href="#pagethree" class="ui-btn" data-transition="slide">Next</a>
     </div>
 
-    <!--<div data-role="footer">-->
-        <!--&lt;!&ndash;<h1>Footer Text</h1>&ndash;&gt;-->
+</div>
+
+<div data-role="page" id="pagethree">
+
+    <div data-role="main" class="ui-content">
+        <h1>Travel Options</h1>
+
+        <div  data-role="fieldcontain">
+            <fieldset data-role="controlgroup">
+                <!--<legend>Choose as many snacks as you'd like:</legend>-->
+                <input type="checkbox" name="UBER-checkbox" id="checkbox-1a" class="custom" />
+                <label for="checkbox-1a">UBER</label>
+
+                <input type="checkbox" name="Driving-checkbox" id="checkbox-2a" class="custom" />
+                <label for="checkbox-2a">Car</label>
+
+                <input type="checkbox" name="Bus-checkbox" id="checkbox-3a" class="custom" />
+                <label for="checkbox-3a">Bus</label>
+
+                <input type="checkbox" name="Walking-checkbox" id="checkbox-4a" class="custom" />
+                <label for="checkbox-4a">Walking</label>
+            </fieldset>
+        </div>
+
+        <a href="#pagefour" class="ui-btn" data-transition="slide">Compare</a>
+    </div>
+
+
+</div>
+
+<div data-role="page" id="pagefour">
+    <!--<div data-role="header">-->
+    <!--<h1>Buttons</h1>-->
     <!--</div>-->
+
+    <div data-role="main" class="ui-content">
+        <h1>Comparison page</h1>
+
+        <!--<a href="#pagethree" class="ui-btn" data-transition="slide">Compare</a>-->
+    </div>
+
+
 </div>
 
 </body>
