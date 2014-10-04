@@ -12,50 +12,50 @@ function organize(uber_details, alternatives, input) {
 
 	if (alternatives.bus != null) {
 		bus = {
-			"eta":alternatives.bus.eta,
-			"price":alternatives.bus.price,
-			"distance":alternatives.bus.distance
+			"eta": alternatives.bus.eta,
+			"price": alternatives.bus.price,
+			"distance": alternatives.bus.distance
 		};
 	}
 
 	if (alternatives.bike != null) {
 		bike = {
-			"eta":alternatives.bike.eta,
-			"price":"Free",
-			"distance":alternatives.bike.distance
+			"eta": alternatives.bike.eta,
+			"price": "Free",
+			"distance": alternatives.bike.distance
 		};
 	}
 
 	if (alternatives.walk != null) {
 		walk = {
-			"eta":alternatives.walk.eta,
-			"price":"Free",
-			"distance":alternatives.walk.distance
+			"eta": alternatives.walk.eta,
+			"price": "Free",
+			"distance": alternatives.walk.distance
 		};
 	}
 
 	if (alternatives.car != null) {
 		car = {
-			"eta":alternatives.car.eta,
-			"price":alternatives.car.price,
-			"distance":alternatives.car.distance
+			"eta": alternatives.car.eta,
+			"price": alternatives.car.price,
+			"distance": alternatives.car.distance
 		};
 	}
 
 	var final = {
 		"uber": {
 			"time": uber_time,
-			"distance" : uber_distance,
-			"price" : uber_price
+			"distance": uber_distance,
+			"price": uber_price
 		},
-		"bus":bus,
-		"bike":bike,
-		"walk":walk,
-		"car":car,
+		"bus": bus,
+		"bike": bike,
+		"walk": walk,
+		"car": car,
 		"locations": {
 			"latitude": latitude,
-			"longitude":longitude,
-			"destination":destination
+			"longitude": longitude,
+			"destination": destination
 		}
 	};
 	console.log(final);
