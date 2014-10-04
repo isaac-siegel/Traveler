@@ -1,0 +1,21 @@
+#pageone {
+    background-color: #0E83CD;
+    color: white;
+    text-align: center;
+    font-family: "Bariol", Helvetica,sans-serif !important;
+}
+
+#pagetwo {
+    background-color: #0E83CD;
+    color: white;
+    text-align: center;
+    font: Bariol;
+}
+
+/*@font-face {*/
+    /*font-family: Bariol;*/
+    /*src: url("//fonts/Bariol_Regular.otf") format("opentype");*/
+/*}*/
+
+@font-face{font-family:"Bariol";src:url(fonts/Bariol_Regular.otf) format('opentype');font-weight:100;font-style:normal}
+@font-face{font-family:"Bariol";src:url(fonts/Bariol_Regular.otf) format('opentype');font-weight:100;font-style:italic}
