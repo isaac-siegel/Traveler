@@ -9,6 +9,12 @@
 
     <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
     <script src="http://code.jquery.com/mobile/1.4.4/jquery.mobile-1.4.4.min.js"></script>
+    <script src="http://maps.googleapis.com/maps/api/js?sensor=false&amp;libraries=places"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+
+    <script src="js/jquery.geocomplete.js"></script>
+    <script src="js/logger.js"></script>
+    <script src="js/destinationSelection.js"></script>
 </head>
 <body>
 
@@ -29,12 +35,16 @@
 </div>
 
 <div data-role="page" id="pagetwo">
-    <!--<div data-role="header">-->
-        <!--<h1>Buttons</h1>-->
-    <!--</div>-->
 
     <div data-role="main" class="ui-content">
-        <h1>Where do you want to go?</h1>
+        <h1>Destination</h1>
+
+        <form>
+            <input id="geocomplete" type="text" placeholder="Type in an address" size="90" />
+            <input id="find" type="button" value="find" />
+        </form>
+
+        <div class="map_canvas"></div>
 
         <a href="#pagethree" class="ui-btn" data-transition="slide">Next</a>
     </div>
