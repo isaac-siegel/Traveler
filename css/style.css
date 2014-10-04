@@ -12,6 +12,19 @@
     font: Bariol;
 }
 
+#pagethree {
+    background-color: #0E83CD;
+    color: white;
+    text-align: center;
+    font: Bariol;
+}
+#pagefour {
+    background-color: #0E83CD;
+    color: white;
+    text-align: center;
+    font: Bariol;
+}
+
 /*@font-face {*/
     /*font-family: Bariol;*/
     /*src: url("//fonts/Bariol_Regular.otf") format("opentype");*/
