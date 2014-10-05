@@ -201,7 +201,7 @@ function alertUser(durationData)
       " Minutes: " + durationData[i].Minutes + " Seconds: " + durationData[i].Seconds + "\n"
   }
 
-  console.log(durations)
+  alert(durations);
 }
 
 // Convert transportation data array into JSON
