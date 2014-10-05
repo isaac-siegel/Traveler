@@ -34,7 +34,7 @@ function getLatLong() {
 function GetGoogleData(type, callback) {
 
   //var startlocation = document.getElementById('Start').value
-  var startlocation = "3485 Farquhar Ave, Los Alamitos, CA"
+  var startlocation = "1988 martin luther king jr ave, Berkeley, CA"
   var endlocation = document.getElementById('geocomplete').value
 
   var map = new google.maps.Map(document.getElementById('map-canvas'), {
@@ -72,7 +72,8 @@ function GetGoogleData(type, callback) {
     var request = {
     origin: startlocation, 
     destination: endlocation,
-    travelMode: googleTransType
+    travelMode: googleTransType, 
+    transitOptions: {departureTime: new Date()}
     };
 
     directionsService.route(request, function(response, status) {
