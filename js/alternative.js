@@ -444,7 +444,7 @@ function PriorityMoney(){
 function highlight(rowNumber) {
     //TODO: highlight the specific part
     var str ='section' +  rowNumber;
-    //document.getElementById(str).style.border = '5px solid green';
+    document.getElementById(str).style.backgroundColor = 'green';
 
     // of the ending results table
 
