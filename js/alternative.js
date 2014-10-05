@@ -216,6 +216,7 @@ function GetDuration()
               }
           })
 
+
 }
 
 function durationToString(data)
@@ -235,7 +236,7 @@ function durationToString(data)
 
 
 function PopulateTable(durationData){
-    console.log("hello");
+
     document.getElementById("uberTime").innerHTML = -1;
     document.getElementById("drivingTime").innerHTML = durationToString(durationData[0]);
     document.getElementById("walkingTime").innerHTML = durationToString(durationData[2]);
@@ -248,11 +249,6 @@ function PopulateTable(durationData){
     document.getElementById("drivingCost").innerHTML = -1;
     document.getElementById("walkingCost").innerHTML = -1;
     document.getElementById("busCost").innerHTML = -1;
-
-
-
-    console.log("hi");
-
 
 
 }
