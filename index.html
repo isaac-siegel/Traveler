@@ -18,6 +18,7 @@
 
     <script src="js/alternative.js"></script>
     <link rel="stylesheet" type="text/css" media="all" href="css/stylesTable.css">
+    <link rel="stylesheet" href="octicons/octicons.css">
     <script type="text/javascript" src="js/jquery.tablesorter.min.js"></script>
 
 </head>
@@ -50,29 +51,23 @@
 <div data-role="page" id="pagetwo">
 
     <div data-role="main" class="ui-content">
-        <h1>Travel Options</h1>
+        <h1>Priorities</h1>
 
-        <div  data-role="fieldcontain" id="checkboxes" >
-            <fieldset data-role="controlgroup" >
-                <!--<legend>Choose as many snacks as you'd like:</legend>-->
-                <input type="checkbox" name="UBER-checkbox" id="checkbox-1a" class="custom" />
-                <label for="checkbox-1a">UBER</label>
+        <br><br>
 
-                <input type="checkbox" name="Driving-checkbox" class="transportation" id="checkbox-2a" value="driving"/>
-                <label for="checkbox-2a">Car</label>
+        <a href="#pagethree" data-transition="slide" onclick="PrioritySpeed();">
+            <i class="fa fa-clock-o fa-5x fa-inverse" ></i>
+        </a>
 
-                <input type="checkbox" name="Bus-checkbox" class="transportation" id="checkbox-3a" value="transit"/>
-                <label for="checkbox-3a">Bus</label>
+        <br> <br><br>   <br><br><br>
 
-                <input type="checkbox" name="Walking-checkbox" class="transportation" id="checkbox-4a" value="walking"/>
-                <label for="checkbox-4a">Walking</label>
+        <a href="#pagethree" data-transition="slide" onclick="PriorityMoney();">
+            <i class="fa fa-money fa-5x fa-inverse" ></i>
+        </a>
 
-                <input type="checkbox" name="Biking-checkbox" class="transportation" id="checkbox-5a" value="biking"/>
-                <label for="checkbox-5a">Biking</label>
 
-            </fieldset>
 
-            <a href="#pagethree" class="ui-btn" data-transition="slide" onclick="GetDuration()">Compare</a>
+            <!--<a href="#pagethree" class="ui-btn" data-transition="slide" onclick="GetDuration()">Compare</a>-->
         </div>
     </div>
 
@@ -80,53 +75,94 @@
 </div>
 
 <div data-role="page" id="pagethree">
+    <br><br><br>
+    <div id="wrapper">
+    <table id="resultTable">
+        <tr id="section0">
+            <td id="uberTime">-1000 min</td>
 
-    <div data-role="main" class="ui-content" id="resultTable">
-        <h1>Comparison page</h1>
-        <table id="keywords" cellspacing="0" cellpadding="0">
-            <thead>
-            <tr>
-                <th><span>Service</span></th>
-                <th><span>Time</span></th>
-                <th><span>Price</span></th>
-                <!--<th><span>CTR</span></th>-->
-                <!--<th><span>Rank</span></th>-->
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-                <td class="lalign">UBER</td>
-                <td>31 min</td>
-                <td>$110</td>
+            <td colspan="2" ><img style="width: 40%" src="uberLogo.jpg"></td>
+            <td id="uberCost">$110</td>
 
-            </tr>
-            <tr>
-                <td class="lalign">Driving</td>
-                <td>47 min</td>
-                <td>$500</td>
+        </tr>
 
-            </tr>
-            <tr>
-                <td class="lalign">Walking</td>
-                <td>256 min</td>
-                <td>$900</td>
 
-            </tr>
-            <tr>
-                <td class="lalign">Bus</td>
-                <td>4 min</td>
-                <td>$350</td>
+        <tr id="section1">
+            <td id="busTime">-1000 min</td>
+            <td colspan="2" ><i style="margin:0 auto;" class="fa fa-bus fa-3x fa-inverse"></i></td>
+            <td id="busCost">$350</td>
+        </tr>
+        <tr id="section2">
 
-            </tr>
+            <td id="walkingTime">-1000 min</td>
+            <td colspan="2" ><span style="font-size: 145px;" class="mega-octicon octicon-steps"></span></td>
+            <td id="walkingCost">$900</td>
 
-            </tbody>
-        </table>
+        </tr>
+        <tr id="section3">
+            <td id="drivingTime">-1000 min</td>
+            <td colspan="2" ><i style="margin:0 auto;" class="fa fa-car fa-3x fa-inverse"></i></td>
+            <td id="drivingCost">$500</td>
+        </tr>
+        <tr id="section4">
+            <td id="bikingTime">-1000 min</td>
+            <td colspan="2" ><i style="margin:0 auto;" class="fa fa-bicycle fa-3x fa-inverse"></i></td>
+            <td id="bikingCost">$500</td>
+        </tr>
+
+        <tr>
+
+
+        </tr>
+    </table>
     </div>
-    <script type="text/javascript">
-        $(function(){
-            $('#keywords').tablesorter();
-        });
-    </script>
+
+    <!--<div data-role="main" class="ui-content" >-->
+        <!--<h1>Travel Options</h1>-->
+        <!--<table id="keywords" cellspacing="0" cellpadding="0">-->
+            <!--<thead>-->
+            <!--<tr>-->
+                <!--<th><span>Service</span></th>-->
+                <!--<th><span>Time</span></th>-->
+                <!--<th><span>Price</span></th>-->
+                <!--&lt;!&ndash;<th><span>CTR</span></th>&ndash;&gt;-->
+                <!--&lt;!&ndash;<th><span>Rank</span></th>&ndash;&gt;-->
+            <!--</tr>-->
+            <!--</thead>-->
+            <!--<tbody>-->
+            <!--<tr>-->
+                <!--<td class="lalign">UBER</td>-->
+                <!--<td id="uberTime">31 min</td>-->
+                <!--<td id="uberCost">$110</td>-->
+
+            <!--</tr>-->
+            <!--<tr>-->
+                <!--<td class="lalign">Driving</td>-->
+                <!--<td id="drivingTime">47 min</td>-->
+                <!--<td id="drivingCost">$500</td>-->
+
+            <!--</tr>-->
+            <!--<tr>-->
+                <!--<td class="lalign">Walking</td>-->
+                <!--<td id="walkingTime">256 min</td>-->
+                <!--<td id="walkingCost">$900</td>-->
+
+            <!--</tr>-->
+            <!--<tr>-->
+                <!--<td class="lalign">Bus</td>-->
+                <!--<td id="busTime">4 min</td>-->
+                <!--<td id="busCost">$350</td>-->
+
+            <!--</tr>-->
+
+            <!--</tbody>-->
+        <!--</table>-->
+    <!--</div>-->
+    <!--<script type="text/javascript">-->
+        <!--$(function(){-->
+            <!--$('#keywords').tablesorter();-->
+        <!--});-->
+    <!--</script>-->
 
         <div id="map-canvas"></div>
         <!--<a href="#pagethree" class="ui-btn" data-transition="slide">Compare</a>-->
