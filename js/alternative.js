@@ -255,15 +255,21 @@ function PopulateTable(durationData){
 
 function PrioritySpeed(){
     GetDuration();
-    //TODO: logic on what to highlight
-    //call highlight(rowToHighlight)
-
+    if (obj.walk.eta < 600) highlight(2);
+    else if (obj.bike.eta < obj.car.eta + 200 && obj.bike.eta < obj.uber.time) 
+      highlight(4)
+    else if (obj.bike.eta > obj.car.eta + 200 && obj.car.eta + 180< obj.uber.time)
+      highlight(3)
+    else if (obj.bus.eta < obj.uber.time) highlight(1);
+    else highlight(0);
 }
 
 function PriorityMoney(){
     GetDuration();
-    //TODO: logic on what to highlight
-    //call highlight(rowToHighlight)
+    if (obj.walk.eta < 300) highlight(2);
+    if (obj.bike.eta < 700) highlight(4);
+    highlight(3)
+
 
 }
 
@@ -295,11 +301,11 @@ function alertUser(durationData)
 // Convert transportation data array into JSON
 function make_json(data) {
 
-  var final = {};
+  obj = {};
   for (var i = 0; i < data.length; i++) {
-          final[data[i].Type] = data[i];
+          obj[data[i].Type] = data[i];
   }
-  return final;
+  return obj;
 }
 
 // Caculat driving cost ; time_drive is minutes
