@@ -165,6 +165,8 @@ function GetGoogleData(type, callback) {
 function GetDuration()
 {
   var durationData = []
+    getDataUber()
+
   /*
   var inputElements = document.getElementsByClassName('transportation')
   for(var i=0; inputElements[i]; ++i){
@@ -233,6 +235,28 @@ function durationToString(data)
     return str;
 
 }
+
+
+function getDataUber(start_lat, start_long, end_lat, end_long) {
+
+    //var url = 'http://api.micahbenn.com/uber.php?startLat=33.84157&startLong=-117.46965&endLat=33.850571&endLong=-118.364241';
+    var url = 'http://api.micahbenn.com/uber.php?startLat=';
+
+    url += start_lat + '&startLong=' + start_long;
+    url += '&endLat=' + end_lat + '&endLong=' + end_long;
+
+    alert('url is: '+ url);
+
+    console.log(url);
+
+    $.get(url, function(data){
+        console.log(data);
+    });
+}
+
+$(document).ready(function(){
+    getDataUber(37.775818,-122.418028);
+});
 
 
 function PopulateTable(durationData){
