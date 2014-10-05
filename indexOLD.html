@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.4/jquery.mobile-1.4.4.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="font-awesome-4.2.0/css/font-awesome.min.css">
+
+
+    <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="http://code.jquery.com/mobile/1.4.4/jquery.mobile-1.4.4.min.js"></script>
+    <script src="http://maps.googleapis.com/maps/api/js?sensor=false&amp;libraries=places"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+
+    <script src="js/jquery.geocomplete.js"></script>
+    <script src="js/logger.js"></script>
+    <!--<script src="js/destinationSelection.js"></script>-->
+    <script>
+        $(function(){
+
+            var options = {
+                map: ".map_canvas"
+            };
+
+            $("#geocomplete").geocomplete(options)
+                    .bind("geocode:result", function(event, result){
+                        $.log("Result: " + result.formatted_address);
+                    })
+                    .bind("geocode:error", function(event, status){
+                        $.log("ERROR: " + status);
+                    })
+                    .bind("geocode:multiple", function(event, results){
+                        $.log("Multiple: " + results.length + " results found");
+                    });
+
+            $("#find").click(function(){
+                $("#geocomplete").trigger("geocode");
+            });
+
+            $("#examples a").click(function(){
+                $("#geocomplete").val($(this).text()).trigger("geocode");
+                return false;
+            });
+
+        });
+    </script>
+</head>
+<body>
+
+<div data-role="page" id="pageone">
+    <!--<div data-role="header">-->
+        <!--<h1>Buttons</h1>-->
+    <!--</div>-->
+
+    <div data-role="main" class="ui-content">
+        <h1>travelr</h1>
+        <i class="fa fa-map-marker fa-5x"></i>
+
+        <form>
+            <input id="geocomplete" type="text" placeholder="Type in an address"  />
+            <input id="find" type="button" value="find" />
+        </form>
+
+        <div class="map_canvas"></div>
+
+        <a href="#pagetwo" class="ui-btn" data-transition="slide" data-inline="true">Take Me Places!</a>
+    </div>
+
+    <!--<div data-role="footer">-->
+        <!--<h1>Footer Text</h1>-->
+    <!--</div>-->
+</div>
+
+
+<div data-role="page" id="pagetwo">
+
+    <div data-role="main" class="ui-content">
+        <h1>Travel Options</h1>
+
+        <div data-role="fieldcontain">
+            <fieldset data-role="controlgroup">
+                <!--<legend>Choose as many snacks as you'd like:</legend>-->
+                <input type="checkbox" name="UBER-checkbox" id="checkbox-1a" class="custom" />
+                <label for="checkbox-1a">UBER</label>
+
+                <input type="checkbox" name="Driving-checkbox" id="checkbox-2a" class="custom" />
+                <label for="checkbox-2a">Car</label>
+
+                <input type="checkbox" name="Bus-checkbox" id="checkbox-3a" class="custom" />
+                <label for="checkbox-3a">Bus</label>
+
+                <input type="checkbox" name="Walking-checkbox" id="checkbox-4a" class="custom" />
+                <label for="checkbox-4a">Walking</label>
+            </fieldset>
+        </div>
+
+        <a href="#pagethree" class="ui-btn" data-transition="slide">Compare</a>
+    </div>
+
+
+</div>
+
+<div data-role="page" id="pagethree">
+    <!--<div data-role="header">-->
+    <!--<h1>Buttons</h1>-->
+    <!--</div>-->
+
+    <div data-role="main" class="ui-content">
+        <h1>Comparison page</h1>
+
+        <!--<a href="#pagethree" class="ui-btn" data-transition="slide">Compare</a>-->
+    </div>
+
+
+</div>
+
+
+</body>
+</html>
