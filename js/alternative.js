@@ -436,13 +436,16 @@ function PriorityMoney(){
     GetDuration();
     if (obj.walk.eta < 300) highlight(2);
     if (obj.bike.eta < 700) highlight(4);
-    highlight(3)
+    highlight(3);
 
 
 }
 
 function highlight(rowNumber) {
     //TODO: highlight the specific part
+    var str ='section' +  rowNumber;
+    //document.getElementById(str).style.border = '5px solid green';
+
     // of the ending results table
 
 }
