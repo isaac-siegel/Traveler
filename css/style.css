@@ -44,9 +44,9 @@
 #resultTable {
     margin: 0 auto;
 
-    width: 80%;
+    width: 95%;
     border: 1px solid white;
-    font-size: 30px;
+    font-size: 20px;
     table-layout: fixed;
 
 }

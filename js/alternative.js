@@ -378,15 +378,6 @@ function PriorityMoney(){
     )
 }
 
-
-function highlight(rowNumber) {
-    //TODO: highlight the specific part
-    // of the ending results table
-
-    console.log(rowNumber)
-
-}
-
 function convertToMin(data)
 {
     var minutes = 0;
@@ -448,10 +439,7 @@ function getDataUber(start_lat, start_long, end_lat, end_long, durationData) {
         AddTime(uberObject, (parseInt(processed) + parseInt(saveDriveTime.ETA)))
         uberObject.Price = price
     });
-
-    durationData.push(uberObject)
 }
-
 // Quickly parse hours, mins, and seconds for an object 
 // when given a time
 function AddTime(data, totalSeconds)
@@ -462,6 +450,12 @@ function AddTime(data, totalSeconds)
   data.Minutes = Math.floor(time / 60)
   time = time % 60
   data.Seconds = time
+}
+
+function highlight(rowNumber) {
+    //TODO: highlight the specific part
+    var str ='section' +  rowNumber;
+    document.getElementById(str).style.backgroundColor = 'green';
 }
 
 $(document).ready(function(){
