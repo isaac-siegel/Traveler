@@ -2,6 +2,7 @@ var geocoder;
 var map;
 var startlocation;
 var endlocation;
+var saveDriveTime;
 
 
 function initialize(callback) {
@@ -168,7 +169,7 @@ function GetGoogleData(type, callback) {
 function GetDuration()
 {
   var durationData = []
-    getDataUber()
+    //getDataUber()
 
   /*
   var inputElements = document.getElementsByClassName('transportation')
@@ -218,7 +219,13 @@ function GetDuration()
                 // When all data is done, print it
                 alertUser(durationData)
                 var jsonFile = make_json(durationData)
+
+
                 console.log(jsonFile)
+
+                  getDataUber(startlocation.lat(), startlocation.lng(),
+                      endlocation.lat(), endlocation.lng());
+
               }
           })
     })
@@ -241,47 +248,7 @@ function durationToString(data)
 
 }
 
-
-function PopulateTable(durationData){
-
-    document.getElementById("uberTime").innerHTML = -1;
-    document.getElementById("drivingTime").innerHTML = durationToString(durationData[0]);
-    document.getElementById("walkingTime").innerHTML = durationToString(durationData[2]);
-    document.getElementById("busTime").innerHTML = durationToString(durationData[1]);
-    document.getElementById("bikingTime").innerHTML = durationToString(durationData[3]);
-
-
-
-    document.getElementById("uberCost").innerHTML = -1;
-    document.getElementById("drivingCost").innerHTML = -1;
-    document.getElementById("walkingCost").innerHTML = -1;
-    document.getElementById("busCost").innerHTML = -1;
-
-
-}
-
-function PrioritySpeed(){
-    GetDuration();
-    if (obj.walk.eta < 600) highlight(2);
-    else if (obj.bike.eta < obj.car.eta + 200 && obj.bike.eta < obj.uber.time) 
-      highlight(4)
-    else if (obj.bike.eta > obj.car.eta + 200 && obj.car.eta + 180< obj.uber.time)
-      highlight(3)
-    else if (obj.bus.eta < obj.uber.time) highlight(1);
-    else highlight(0);
-}
-
-function PriorityMoney(){
-    GetDuration();
-    if (obj.walk.eta < 300) highlight(2);
-    if (obj.bike.eta < 700) highlight(4);
-    highlight(3)
-
-
-
-}
-
-function durationToString(data)
+function addDurationToString(data, seconds)
 {
     var str = "";
     if(data.Hours > 0 && data != null)
@@ -290,12 +257,71 @@ function durationToString(data)
     }
     if(data.Minutes > 0 && data !=null)
     {
-        str += " " + data.Minutes + "mins";
+        var sum = data.Minutes + (Math.floor(seconds/60))
+        str += " " + sum + "mins";
     }
     return str;
 
 }
 
+
+function PopulateTable(durationData){
+
+    document.getElementById("uberTime").innerHTML = -1;
+    document.getElementById("drivingTime").innerHTML = durationToString(durationData[0]);
+    saveDriveTime = durationData[0];
+    document.getElementById("walkingTime").innerHTML = durationToString(durationData[2]);
+    document.getElementById("busTime").innerHTML = durationToString(durationData[1]);
+    //document.getElementById("bikingTime").innerHTML = durationToString(durationData[3]);
+
+
+
+    document.getElementById("drivingCost").innerHTML = -1;
+    document.getElementById("walkingCost").innerHTML =
+        calc_calories_walking(convertToMin(durationData[2]));
+    document.getElementById("busCost").innerHTML = -1;
+
+
+}
+
+function PrioritySpeed(){
+    GetDuration();
+//    if (obj.walk.eta < 600) highlight(2);
+//    else if (obj.bike.eta < obj.car.eta + 200 && obj.bike.eta < obj.uber.time)
+//      highlight(4)
+//    else if (obj.bike.eta > obj.car.eta + 200 && obj.car.eta + 180< obj.uber.time)
+//      highlight(3)
+//    else if (obj.bus.eta < obj.uber.time) highlight(1);
+//    else highlight(0);
+}
+
+function PriorityMoney(){
+    GetDuration();
+//    if (obj.walk.eta < 300) highlight(2);
+//    if (obj.bike.eta < 700) highlight(4);
+//    highlight(3)
+
+
+
+}
+
+function convertToMin(data)
+{
+    var minutes = 0;
+    if (data != null)
+    {
+        minutes = data.Hours * 60;
+        minutes += data.Minutes;
+    }
+    return minutes;
+}
+
+
+
+function parseUberPrice(arr)
+{
+    document.getElementById("uberCost").innerHTML = arr.split('"')[1];
+}
 
 function getDataUber(start_lat, start_long, end_lat, end_long) {
 
@@ -305,37 +331,32 @@ function getDataUber(start_lat, start_long, end_lat, end_long) {
     url += start_lat + '&startLong=' + start_long;
     url += '&endLat=' + end_lat + '&endLong=' + end_long;
 
-    alert('url is: '+ url);
+    //alert('url is: '+ url);
 
     console.log(url);
 
     $.get(url, function(data){
-        console.log(data);
+        console.log('data is: ' + data);
+        parseUberPrice(data);
+
+    });
+
+    url += "&type=time";
+    $.get(url, function(data){
+        console.log('data is: ' + data);
+        var processed = data.substring(1,data.length);
+        processed = processed.split(',')[0];
+        processed = addDurationToString(saveDriveTime,processed);
+        document.getElementById("uberTime").innerHTML = processed;
+
     });
 }
 
 $(document).ready(function(){
-    getDataUber(37.775818,-122.418028);
+   // getDataUber(37.775818,-122.418028,0,0);
 });
 
 
-function PopulateTable(durationData){
-
-    document.getElementById("uberTime").innerHTML = -1;
-    document.getElementById("drivingTime").innerHTML = durationToString(durationData[0]);
-    document.getElementById("walkingTime").innerHTML = durationToString(durationData[2]);
-    document.getElementById("busTime").innerHTML = durationToString(durationData[1]);
-    document.getElementById("bikingTime").innerHTML = durationToString(durationData[3]);
-
-
-
-    document.getElementById("uberCost").innerHTML = -1;
-    document.getElementById("drivingCost").innerHTML = -1;
-    document.getElementById("walkingCost").innerHTML = -1;
-    document.getElementById("busCost").innerHTML = -1;
-
-
-}
 
 function PrioritySpeed(){
     GetDuration();
