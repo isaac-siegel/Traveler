@@ -43,13 +43,24 @@
 
 #resultTable {
     margin: 0 auto;
+
+    width: 80%;
+    border: 1px solid white;
+    font-size: 30px;
+    table-layout: fixed;
+
+}
+
+#wrapper {
     width: 100%;
+
 }
 
 #keywords {
     width: 80%;
     border: 1px solid white;
     margin: 0 auto;
+
 
 
 }
@@ -63,7 +74,8 @@ th{
 }
 
 td {
-    padding: 15px;
+    padding: 5px;
+    text-align: center;
 }
 
 
