@@ -256,14 +256,20 @@ function PopulateTable(durationData){
 function PrioritySpeed(){
     GetDuration();
     //TODO: logic on what to highlight
-    //call highlight[row]
+    //call highlight(rowToHighlight)
 
 }
 
 function PriorityMoney(){
     GetDuration();
     //TODO: logic on what to highlight
-    //call highlight[row]
+    //call highlight(rowToHighlight)
+
+}
+
+function highlight(rowNumber) {
+    //TODO: highlight the specific part
+    // of the ending results table
 
 }
 
