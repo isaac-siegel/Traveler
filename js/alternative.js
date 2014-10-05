@@ -215,18 +215,20 @@ function GetDuration(callback)
         for(var i = 0; i < transportationType.length; i++)
           GetGoogleData(transportationType[i], function(data) {
               durationData.push(data);
+              if(data.Type == transportationType[1])
+              {
+                console.log(data)
+                saveDriveTime = data.ETA;
+              }
               if(durationData.length == transportationType.length)
               {
-                // When all data is done, print it
-                alertUser(durationData)
-
                 getDataUber(startlocation.lat(), startlocation.lng(),
-                    endlocation.lat(), endlocation.lng(), durationData);
+                    endlocation.lat(), endlocation.lng(), durationData, function(durationData){
+                    PopulateTable(durationData) 
+                    var jsonFile = make_json(durationData)
+                    //console.log(jsonFile)
 
-
-                var jsonFile = make_json(durationData)
-                console.log(jsonFile)
-                callback(jsonFile)
+                    callback(jsonFile) });
               }
           })
     })
@@ -331,35 +333,35 @@ function addDurationToString(data, seconds)
 
 function PopulateTable(durationData){
 
+    console.log(durationData)
+
     document.getElementById("uberTime").innerHTML = -1;
     document.getElementById("drivingTime").innerHTML = durationToString("DRIVING", durationData)
-    saveDriveTime = durationData[0];
     document.getElementById("walkingTime").innerHTML = durationToString("WALKING", durationData)
     document.getElementById("busTime").innerHTML = durationToString("TRANSIT", durationData)
     document.getElementById("bikingTime").innerHTML = durationToString("BICYCLING", durationData)
-
-
+    document.getElementById("uberTime").innerHTML = durationToString("UBER", durationData)
 
     document.getElementById("drivingCost").innerHTML = priceToString("DRIVING", durationData)
     document.getElementById("walkingCost").innerHTML = priceToString("WALKING", durationData)
     document.getElementById("busCost").innerHTML = priceToString("TRANSIT", durationData)
     document.getElementById("bikingCost").innerHTML = priceToString("BICYCLING", durationData)
-
+    document.getElementById("uberCost").innerHTML = priceToString("UBER", durationData)
 
 }
 
 // When Priority Speed button is clicked
 function PrioritySpeed(){
     GetDuration(
-      function(data)
+      function(obj)
       {
         console.log("JSON: " + obj)
         if (obj.WALKING.ETA < 600) highlight(2);
-        else if (obj.BICYCLING.ETA < obj.DRIVING.ETA + 200 && obj.BICYCLING.ETA < obj.UBER.time)
+        else if (obj.BICYCLING.ETA < obj.DRIVING.ETA + 200 && obj.BICYCLING.ETA < obj.UBER.ETA)
           highlight(4)
-        else if (obj.BICYCLING.ETA > obj.DRIVING.ETA + 200 && obj.DRIVING.ETA + 180< obj.UBER.time)
+        else if (obj.BICYCLING.ETA > obj.DRIVING.ETA + 200 && obj.DRIVING.ETA + 180 < obj.UBER.ETA)
           highlight(3)
-        else if (obj.TRANSIT.ETA < obj.UBER.time) highlight(1);
+        else if (obj.TRANSIT.ETA < obj.UBER.ETA) highlight(1);
         else highlight(0);
       }
     )
@@ -396,7 +398,7 @@ function parseUberPrice(arr)
     document.getElementById("uberCost").innerHTML = arr.split('"')[1];
 }
 
-function getDataUber(start_lat, start_long, end_lat, end_long, durationData) {
+function getDataUber(start_lat, start_long, end_lat, end_long, durationData, callback) {
 
     //var url = 'http://api.micahbenn.com/uber.php?startLat=33.84157&startLong=-117.46965&endLat=33.850571&endLong=-118.364241';
     var url = 'http://api.micahbenn.com/uber.php?startLat=';
@@ -426,19 +428,25 @@ function getDataUber(start_lat, start_long, end_lat, end_long, durationData) {
         //console.log('data is: ' + data);
         //parseUberPrice(data);
         price = data.split('"')[1]
+        AddUberTime(url)
     });
 
-    url += "&type=time";
-    $.get(url, function(data){
-        //console.log('data is: ' + data);
-        var processed = data.substring(1,data.length);
-        processed = processed.split(',')[0];
-        //processed = addDurationToString(saveDriveTime,processed);
-        //document.getElementById("uberTime").innerHTML = processed;)
-        uberObject.ETA = parseInt(processed) + parseInt(saveDriveTime.ETA)
-        AddTime(uberObject, (parseInt(processed) + parseInt(saveDriveTime.ETA)))
-        uberObject.Price = price
-    });
+    function AddUberTime(url)
+    {
+      url += "&type=time";
+      $.get(url, function(data){
+          //console.log('data is: ' + data);
+          var processed = data.substring(1,data.length);
+          processed = processed.split(',')[0];
+          //processed = addDurationToString(saveDriveTime,processed);
+          //document.getElementById("uberTime").innerHTML = processed;)
+          uberObject.ETA = parseInt(processed) + parseInt(saveDriveTime)
+          AddTime(uberObject, (parseInt(processed) + parseInt(saveDriveTime)))
+          uberObject.Price = price
+          durationData.push(uberObject)
+          callback(durationData)
+      });
+    }
 }
 // Quickly parse hours, mins, and seconds for an object 
 // when given a time
