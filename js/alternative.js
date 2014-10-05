@@ -276,6 +276,61 @@ function PriorityMoney(){
     highlight(3)
 
 
+
+}
+
+function durationToString(data)
+{
+    var str = "";
+    if(data.Hours > 0 && data != null)
+    {
+        str += data.Hours + "hrs";
+    }
+    if(data.Minutes > 0 && data !=null)
+    {
+        str += " " + data.Minutes + "mins";
+    }
+    return str;
+
+}
+
+
+function PopulateTable(durationData){
+
+    document.getElementById("uberTime").innerHTML = -1;
+    document.getElementById("drivingTime").innerHTML = durationToString(durationData[0]);
+    document.getElementById("walkingTime").innerHTML = durationToString(durationData[2]);
+    document.getElementById("busTime").innerHTML = durationToString(durationData[1]);
+    document.getElementById("bikingTime").innerHTML = durationToString(durationData[3]);
+
+
+
+    document.getElementById("uberCost").innerHTML = -1;
+    document.getElementById("drivingCost").innerHTML = -1;
+    document.getElementById("walkingCost").innerHTML = -1;
+    document.getElementById("busCost").innerHTML = -1;
+
+
+}
+
+function PrioritySpeed(){
+    GetDuration();
+    if (obj.walk.eta < 600) highlight(2);
+    else if (obj.bike.eta < obj.car.eta + 200 && obj.bike.eta < obj.uber.time) 
+      highlight(4)
+    else if (obj.bike.eta > obj.car.eta + 200 && obj.car.eta + 180< obj.uber.time)
+      highlight(3)
+    else if (obj.bus.eta < obj.uber.time) highlight(1);
+    else highlight(0);
+}
+
+function PriorityMoney(){
+    GetDuration();
+    if (obj.walk.eta < 300) highlight(2);
+    if (obj.bike.eta < 700) highlight(4);
+    highlight(3)
+
+
 }
 
 function highlight(rowNumber) {
