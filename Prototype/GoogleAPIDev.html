@@ -54,7 +54,7 @@
       }
 
       // Show direction from start to end
-      function showDirection() {
+      function showDirection(type, callback) {
 
         var startlocation = document.getElementById('Start').value
         var endlocation = document.getElementById('End').value
@@ -68,49 +68,142 @@
 
         directionsDisplay.setMap(map);
 
-        var request = {
+        // Decide type of transportation
+        var googleTransType = null
+        switch(type)
+        {
+          case "walking":
+            googleTransType = google.maps.TravelMode.WALKING
+            break
+          case "driving":
+            googleTransType = google.maps.TravelMode.DRIVING
+            break;
+          default:
+            break;
+        }
+
+        // valid google map type
+        if(googleTransType != null)
+        {
+          var request = {
           origin: startlocation, 
           destination: endlocation,
-          travelMode: google.maps.DirectionsTravelMode.DRIVING
-        };
+          travelMode: googleTransType
+          };
 
-        directionsService.route(request, function(response, status) {
-          if (status == google.maps.DirectionsStatus.OK) {
-            directionsDisplay.setDirections(response);
-            
-            // calc total time by finding time from each leg
-            var route = directionsDisplay.getDirections()
+          directionsService.route(request, function(response, status) {
+            if (status == google.maps.DirectionsStatus.OK) {
+              directionsDisplay.setDirections(response);
+              
+              // calc total time by finding time from each leg
+              var route = directionsDisplay.getDirections()
 
-            // be sure there is at least one route
-            if(route.routes[0] != null)
-            {
-              // array of all the legs on this route
-              var legs = route.routes[0].legs
-
-              // Traffic time or no?
-              var traffic = false
-
-              // Total time in seconds
-              var totalTime = 0
-
-              // go through all legs and total up the time
-              for(var i = 0; i < legs.length; i++)
+              // be sure there is at least one route
+              if(route.routes[0] != null)
               {
-                if(traffic)
-                  totalTime = legs[i].duration_in_traffic.value
-                else
-                  totalTime = legs[i].duration.value
-              }
+                // array of all the legs on this route
+                var legs = route.routes[0].legs
 
-              var hrs = Math.floor(totalTime / 3600)
-              totalTime = totalTime % 3600
-              var mins = Math.floor(totalTime / 60)
-              totalTime = totalTime % 60
-              var secs = totalTime
-              alert("Hours: " + hrs + " Minutes: " + mins + " Seconds: " + secs)
+                // Traffic time or no?
+                var traffic = false
+
+                // Total time in seconds
+                var totalTime = 0
+
+                // Total distance in meters
+                var totalDistance = 0
+
+                // go through all legs and total up the time
+                for(var i = 0; i < legs.length; i++)
+                {
+                  if(traffic)
+                    totalTime = legs[i].duration_in_traffic.value
+                  else
+                    totalTime = legs[i].duration.value
+
+                  // Add distance of leg to total distance
+                  totalDistance += legs[i].distance.value
+                }
+
+                var hrs = Math.floor(totalTime / 3600)
+                totalTime = totalTime % 3600
+                var mins = Math.floor(totalTime / 60)
+                totalTime = totalTime % 60
+                var secs = totalTime
+
+                // Call the callback function when query is done
+                callback({
+                  'Type' : type,
+                  'Hours' : hrs, 
+                  'Minutes' : mins,
+                  'Seconds' : secs,
+                  // convert meters -> miles and round 2 decimal values
+                  // to fixed returns a string and not a number
+                  'Distance' : ((totalDistance * 0.000621371).toFixed(2)/1)
+                })
+              }
             }
-          }
-        });
+          });
+        }
+      }
+
+      function GetDuration()
+      {
+        var durationData = []
+
+        var inputElements = document.getElementsByClassName('transportation');
+        for(var i=0; inputElements[i]; ++i){
+              if(inputElements[i].checked){
+
+                var data = null
+                showDirection(inputElements[i].value, 
+                  function(data) {
+                    durationData.push(data); 
+                    if(durationData.length == inputElements.length)
+                    {
+                      // When all data is done, print it
+                      alertUser(durationData)
+                      var jsonFile = make_json(durationData)
+                      console.log(jsonFile)
+                    }
+                })
+              }
+              else
+              {
+                durationData.push({
+                'Type' : inputElements[i].value,
+                'Hours' : null, 
+                'Minutes' : null,
+                'Seconds' : null,
+                'Distance' : null
+                })
+              }
+        }
+      }
+
+      // print out all the data
+      function alertUser(durationData)
+      {
+
+        var durations = ""
+
+        // String builder
+        for(var i = 0; i < durationData.length; i++)
+        {
+          durations += "Type: " + durationData[i].Type + " Hours: " + durationData[i].Hours + " Minutes: " + durationData[i].Minutes + " Seconds: " + durationData[i].Seconds + "\n"
+        }
+
+        console.log(durations)
+      }
+
+      // Convert transportation data array into JSON
+      function make_json(data) {
+ 
+        var final = {};
+        for (var i = 0; i < data.length; i++) {
+                final[data[i].Type] = data[i];
+        }
+        return final;
       }
       google.maps.event.addDomListener(window, 'load', initialize);
 
@@ -122,8 +215,10 @@
       <input id="Start" type="textbox" value="Long Beach, CA">
       <input id="End" type="textbox" value="Berkeley, CA">
       <input type="button" value="Latitude/Longitude" onclick="codeAddress()">
-      <input type="button" value="ShowDirection" onclick="showDirection()">
+      <input type="button" value="ShowDirection" onclick="GetDuration()">
+      <input class="transportation" name="Walking" type="checkbox" value = "walking">Walking
+      <input class="transportation" name="Driving" type="checkbox" value = "driving">Driving
     </div>
     <div id="map-canvas"></div>
   </body>
-</html>
+</html

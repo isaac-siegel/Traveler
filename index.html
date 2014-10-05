@@ -9,6 +9,17 @@
 
     <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
     <script src="http://code.jquery.com/mobile/1.4.4/jquery.mobile-1.4.4.min.js"></script>
+    <script src="http://maps.googleapis.com/maps/api/js?sensor=false&amp;libraries=places"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+
+    <script src="js/jquery.geocomplete.js"></script>
+    <script src="js/logger.js"></script>
+    <script src="js/destinationSelection.js"></script>
+
+    <script src="js/alternative.js"></script>
+    <link rel="stylesheet" type="text/css" media="all" href="css/stylesTable.css">
+    <script type="text/javascript" src="js/jquery.tablesorter.min.js"></script>
+
 </head>
 <body>
 
@@ -20,7 +31,15 @@
     <div data-role="main" class="ui-content">
         <h1>travelr</h1>
         <i class="fa fa-map-marker fa-5x"></i>
-        <a href="#pagetwo" class="ui-btn" data-transition="slide" data-inline="true">Take Me Places!</a>
+
+        <form>
+            <input id="geocomplete" type="text" placeholder="enter a destination" size="90" data-inline="true"/>
+            <!--<input id="find" type="button" value="find" data-inline="true" />-->
+        </form>
+
+        <div class="map_canvas"></div>
+
+        <a href="#pagetwo" class="ui-btn" data-transition="slide" data-inline="true">Take Me There!</a>
     </div>
 
     <!--<div data-role="footer">-->
@@ -29,59 +48,96 @@
 </div>
 
 <div data-role="page" id="pagetwo">
-    <!--<div data-role="header">-->
-        <!--<h1>Buttons</h1>-->
-    <!--</div>-->
 
     <div data-role="main" class="ui-content">
-        <h1>Where do you want to go?</h1>
+        <h1>Travel Options</h1>
 
-        <a href="#pagethree" class="ui-btn" data-transition="slide">Next</a>
+        <div  data-role="fieldcontain" id="checkboxes" >
+            <fieldset data-role="controlgroup" >
+                <!--<legend>Choose as many snacks as you'd like:</legend>-->
+                <input type="checkbox" name="UBER-checkbox" id="checkbox-1a" class="custom" />
+                <label for="checkbox-1a">UBER</label>
+
+                <input type="checkbox" name="Driving-checkbox" class="transportation" id="checkbox-2a" value="driving"/>
+                <label for="checkbox-2a">Car</label>
+
+                <input type="checkbox" name="Bus-checkbox" class="transportation" id="checkbox-3a" value="transit"/>
+                <label for="checkbox-3a">Bus</label>
+
+                <input type="checkbox" name="Walking-checkbox" class="transportation" id="checkbox-4a" value="walking"/>
+                <label for="checkbox-4a">Walking</label>
+
+                <input type="checkbox" name="Biking-checkbox" class="transportation" id="checkbox-5a" value="biking"/>
+                <label for="checkbox-5a">Biking</label>
+
+            </fieldset>
+
+            <a href="#pagethree" class="ui-btn" data-transition="slide" onclick="GetDuration()">Compare</a>
+        </div>
     </div>
+
 
 </div>
 
 <div data-role="page" id="pagethree">
 
-    <div data-role="main" class="ui-content">
-        <h1>Travel Options</h1>
-
-        <div  data-role="fieldcontain">
-            <fieldset data-role="controlgroup">
-                <!--<legend>Choose as many snacks as you'd like:</legend>-->
-                <input type="checkbox" name="UBER-checkbox" id="checkbox-1a" class="custom" />
-                <label for="checkbox-1a">UBER</label>
-
-                <input type="checkbox" name="Driving-checkbox" id="checkbox-2a" class="custom" />
-                <label for="checkbox-2a">Car</label>
-
-                <input type="checkbox" name="Bus-checkbox" id="checkbox-3a" class="custom" />
-                <label for="checkbox-3a">Bus</label>
-
-                <input type="checkbox" name="Walking-checkbox" id="checkbox-4a" class="custom" />
-                <label for="checkbox-4a">Walking</label>
-            </fieldset>
-        </div>
-
-        <a href="#pagefour" class="ui-btn" data-transition="slide">Compare</a>
-    </div>
-
-
-</div>
-
-<div data-role="page" id="pagefour">
-    <!--<div data-role="header">-->
-    <!--<h1>Buttons</h1>-->
-    <!--</div>-->
-
-    <div data-role="main" class="ui-content">
+    <div data-role="main" class="ui-content" id="resultTable">
         <h1>Comparison page</h1>
+        <table id="keywords" cellspacing="0" cellpadding="0">
+            <thead>
+            <tr>
+                <th><span>Service</span></th>
+                <th><span>Time</span></th>
+                <th><span>Price</span></th>
+                <!--<th><span>CTR</span></th>-->
+                <!--<th><span>Rank</span></th>-->
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td class="lalign">UBER</td>
+                <td>31 min</td>
+                <td>$110</td>
 
+            </tr>
+            <tr>
+                <td class="lalign">Driving</td>
+                <td>47 min</td>
+                <td>$500</td>
+
+            </tr>
+            <tr>
+                <td class="lalign">Walking</td>
+                <td>256 min</td>
+                <td>$900</td>
+
+            </tr>
+            <tr>
+                <td class="lalign">Bus</td>
+                <td>4 min</td>
+                <td>$350</td>
+
+            </tr>
+
+            </tbody>
+        </table>
+    </div>
+    <script type="text/javascript">
+        $(function(){
+            $('#keywords').tablesorter();
+        });
+    </script>
+
+        <div id="map-canvas"></div>
         <!--<a href="#pagethree" class="ui-btn" data-transition="slide">Compare</a>-->
     </div>
 
 
+
+
+
 </div>
+
 
 </body>
 </html>
