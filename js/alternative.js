@@ -267,6 +267,8 @@ function alertUser(durationData)
   }
 
   alert(durations);
+  //Populate table
+  PopulateTable(durationData);
 }
 
 // Convert transportation data array into JSON
