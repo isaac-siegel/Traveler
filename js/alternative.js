@@ -183,6 +183,9 @@ function GetDuration()
                 alertUser(durationData)
                 var jsonFile = make_json(durationData)
                 console.log(jsonFile)
+
+                //Populate table
+                  PopulateTable(durationData);
               }
           })
         }
@@ -218,7 +221,69 @@ function GetDuration()
           })
     })
 
+
 }
+
+function durationToString(data)
+{
+    var str = "";
+    if(data.Hours > 0 && data != null)
+    {
+        str += data.Hours + "hrs";
+    }
+    if(data.Minutes > 0 && data !=null)
+    {
+        str += " " + data.Minutes + "mins";
+    }
+    return str;
+
+}
+
+
+function PopulateTable(durationData){
+
+    document.getElementById("uberTime").innerHTML = -1;
+    document.getElementById("drivingTime").innerHTML = durationToString(durationData[0]);
+    document.getElementById("walkingTime").innerHTML = durationToString(durationData[2]);
+    document.getElementById("busTime").innerHTML = durationToString(durationData[1]);
+    document.getElementById("bikingTime").innerHTML = durationToString(durationData[3]);
+
+
+
+    document.getElementById("uberCost").innerHTML = -1;
+    document.getElementById("drivingCost").innerHTML = -1;
+    document.getElementById("walkingCost").innerHTML = -1;
+    document.getElementById("busCost").innerHTML = -1;
+
+
+}
+
+function PrioritySpeed(){
+    GetDuration();
+    if (obj.walk.eta < 600) highlight(2);
+    else if (obj.bike.eta < obj.car.eta + 200 && obj.bike.eta < obj.uber.time) 
+      highlight(4)
+    else if (obj.bike.eta > obj.car.eta + 200 && obj.car.eta + 180< obj.uber.time)
+      highlight(3)
+    else if (obj.bus.eta < obj.uber.time) highlight(1);
+    else highlight(0);
+}
+
+function PriorityMoney(){
+    GetDuration();
+    if (obj.walk.eta < 300) highlight(2);
+    if (obj.bike.eta < 700) highlight(4);
+    highlight(3)
+
+
+}
+
+function highlight(rowNumber) {
+    //TODO: highlight the specific part
+    // of the ending results table
+
+}
+
 
 // print out all the data
 function alertUser(durationData)
@@ -234,16 +299,18 @@ function alertUser(durationData)
   }
 
   alert(durations);
+  //Populate table
+  PopulateTable(durationData);
 }
 
 // Convert transportation data array into JSON
 function make_json(data) {
 
-  var final = {};
+  obj = {};
   for (var i = 0; i < data.length; i++) {
-          final[data[i].Type] = data[i];
+          obj[data[i].Type] = data[i];
   }
-  return final;
+  return obj;
 }
 
 // Price calculator based on type of trans
