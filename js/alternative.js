@@ -253,6 +253,21 @@ function PopulateTable(durationData){
 
 }
 
+function PrioritySpeed(){
+    GetDuration();
+    //TODO: logic on what to highlight
+    //call highlight[row]
+
+}
+
+function PriorityMoney(){
+    GetDuration();
+    //TODO: logic on what to highlight
+    //call highlight[row]
+
+}
+
+
 // print out all the data
 function alertUser(durationData)
 {

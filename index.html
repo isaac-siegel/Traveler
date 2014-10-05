@@ -50,29 +50,23 @@
 <div data-role="page" id="pagetwo">
 
     <div data-role="main" class="ui-content">
-        <h1>Travel Options</h1>
+        <h1>Priorities</h1>
 
-        <div  data-role="fieldcontain" id="checkboxes" >
-            <fieldset data-role="controlgroup" >
-                <!--<legend>Choose as many snacks as you'd like:</legend>-->
-                <input type="checkbox" name="UBER-checkbox" id="checkbox-1a" class="custom" />
-                <label for="checkbox-1a">UBER</label>
+        <br><br>
 
-                <input type="checkbox" name="Driving-checkbox" class="transportation" id="checkbox-2a" value="driving"/>
-                <label for="checkbox-2a">Car</label>
+        <a href="#pagethree" data-transition="slide" onclick="PrioritySpeed();">
+            <i class="fa fa-clock-o fa-5x fa-inverse" ></i>
+        </a>
 
-                <input type="checkbox" name="Bus-checkbox" class="transportation" id="checkbox-3a" value="transit"/>
-                <label for="checkbox-3a">Bus</label>
+        <br> <br><br>   <br><br><br>
 
-                <input type="checkbox" name="Walking-checkbox" class="transportation" id="checkbox-4a" value="walking"/>
-                <label for="checkbox-4a">Walking</label>
+        <a href="#pagethree" data-transition="slide" onclick="PriorityMoney();">
+            <i class="fa fa-money fa-5x fa-inverse" ></i>
+        </a>
 
-                <input type="checkbox" name="Biking-checkbox" class="transportation" id="checkbox-5a" value="biking"/>
-                <label for="checkbox-5a">Biking</label>
 
-            </fieldset>
 
-            <a href="#pagethree" class="ui-btn" data-transition="slide" onclick="GetDuration()">Compare</a>
+            <!--<a href="#pagethree" class="ui-btn" data-transition="slide" onclick="GetDuration()">Compare</a>-->
         </div>
     </div>
 
@@ -82,7 +76,7 @@
 <div data-role="page" id="pagethree">
 
     <div data-role="main" class="ui-content" id="resultTable">
-        <h1>Comparison page</h1>
+        <h1>Travel Options</h1>
         <table id="keywords" cellspacing="0" cellpadding="0">
             <thead>
             <tr>
