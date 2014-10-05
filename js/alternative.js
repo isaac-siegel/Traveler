@@ -217,7 +217,6 @@ function GetDuration(callback)
               durationData.push(data);
               if(data.Type == transportationType[1])
               {
-                console.log(data)
                 saveDriveTime = data.ETA;
               }
               if(durationData.length == transportationType.length)
@@ -302,7 +301,7 @@ function priceToString(type, data)
       }
       else
       {
-        str += "$" + transObject.Price
+        str += transObject.Price
       }
     }
     else
@@ -333,8 +332,6 @@ function addDurationToString(data, seconds)
 
 function PopulateTable(durationData){
 
-    console.log(durationData)
-
     document.getElementById("uberTime").innerHTML = -1;
     document.getElementById("drivingTime").innerHTML = durationToString("DRIVING", durationData)
     document.getElementById("walkingTime").innerHTML = durationToString("WALKING", durationData)
@@ -355,7 +352,6 @@ function PrioritySpeed(){
     GetDuration(
       function(obj)
       {
-        console.log("JSON: " + obj)
         if (obj.WALKING.ETA < 600) highlight(2);
         else if (obj.BICYCLING.ETA < obj.DRIVING.ETA + 200 && obj.BICYCLING.ETA < obj.UBER.ETA)
           highlight(4)
@@ -528,7 +524,7 @@ function bus_cost()
   {
     fare = Math.floor(Math.random() * 3 + 4)
   }
-  return fare.toFixed(2)
+  return "$" + fare.toFixed(2)
 }
 
 // Caculate driving cost ; time is minutes
@@ -541,7 +537,7 @@ function driving_cost(time, distance) {
     cost += (time/60) * 0.1
   }
 
-  return cost.toFixed(2)
+  return "$" + cost.toFixed(2)
 }
 
 // Calculate calories burned from biking
