@@ -15,6 +15,9 @@
     <script src="js/jquery.geocomplete.js"></script>
     <script src="js/logger.js"></script>
     <script src="js/destinationSelection.js"></script>
+
+    <script src="js/alternative.js"></script>
+
 </head>
 <body>
 
@@ -47,6 +50,7 @@
         <div class="map_canvas"></div>
 
         <a href="#pagethree" class="ui-btn" data-transition="slide">Next</a>
+
     </div>
 
 </div>
@@ -62,18 +66,22 @@
                 <input type="checkbox" name="UBER-checkbox" id="checkbox-1a" class="custom" />
                 <label for="checkbox-1a">UBER</label>
 
-                <input type="checkbox" name="Driving-checkbox" id="checkbox-2a" class="custom" />
+                <input type="checkbox" name="Driving-checkbox" class="transportation" id="checkbox-2a" value="driving"/>
                 <label for="checkbox-2a">Car</label>
 
-                <input type="checkbox" name="Bus-checkbox" id="checkbox-3a" class="custom" />
+                <input type="checkbox" name="Bus-checkbox" class="transportation" id="checkbox-3a" value="transit"/>
                 <label for="checkbox-3a">Bus</label>
 
-                <input type="checkbox" name="Walking-checkbox" id="checkbox-4a" class="custom" />
+                <input type="checkbox" name="Walking-checkbox" class="transportation" id="checkbox-4a" value="walking"/>
                 <label for="checkbox-4a">Walking</label>
+
+                <input type="checkbox" name="Biking-checkbox" class="transportation" id="checkbox-5a" value="biking"/>
+                <label for="checkbox-5a">Biking</label>
+
             </fieldset>
         </div>
 
-        <a href="#pagefour" class="ui-btn" data-transition="slide">Compare</a>
+        <a href="#pagefour" class="ui-btn" data-transition="slide" onclick="GetDuration()">Compare</a>
     </div>
 
 
@@ -87,6 +95,7 @@
     <div data-role="main" class="ui-content">
         <h1>Comparison page</h1>
 
+        <div id="map-canvas"></div>
         <!--<a href="#pagethree" class="ui-btn" data-transition="slide">Compare</a>-->
     </div>
 

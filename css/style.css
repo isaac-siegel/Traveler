@@ -35,6 +35,14 @@
     margin:0px auto; display:inline-block
 }
 
+#map-canvas {
+height: 200px;
+width : 50%;
+margin : auto;
+margin: 0px;
+padding: 0px
+}
+
 /*@font-face {*/
     /*font-family: Bariol;*/
     /*src: url("//fonts/Bariol_Regular.otf") format("opentype");*/
