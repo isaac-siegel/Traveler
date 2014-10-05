@@ -128,7 +128,7 @@ function GetGoogleData(type, callback) {
         }
 
         // copy of total time to preserver total time's value
-        var time = totalTime
+        var time =  totalTime
 
         var hrs = Math.floor(time / 3600)
         time = time % 3600
@@ -233,21 +233,84 @@ function GetDuration()
 
 }
 
-function durationToString(data)
+// Convert transportation to string
+function durationToString(type, data)
 {
     var str = "";
-    if(data.Hours > 0 && data != null)
+
+    //  transportation object
+    var transObject = null
+
+    // Search for the right object based on type
+    for(var i = 0; i < data.length; i++)
     {
-        str += data.Hours + "hrs";
+      if(data[i].Type == type)
+        transObject = data[i]
     }
-    if(data.Minutes > 0 && data !=null)
+
+    // Verify that object was found
+    if(transObject != null)
     {
-        str += " " + data.Minutes + "mins";
+      // Verify that the data's time is not null
+      if(transObject.Hours != null)
+      {
+        if(transObject.Hours > 0)
+        {
+            str += transObject.Hours + "hrs";
+        }
+        if(transObject.Minutes > 0)
+        {
+            str += " " + transObject.Minutes + "mins";
+        }
+      }
+      else
+      {
+        str = "N/A" // Return N/A if null
+      }
     }
+    
     return str;
 
 }
 
+// Convert price to string
+function priceToString(type, data)
+{
+  var str = ""
+
+  //  transportation object
+  var transObject = null
+
+  // Search for the right object based on type
+  for(var i = 0; i < data.length; i++)
+  {
+    if(data[i].Type == type)
+      transObject = data[i]
+  }
+
+  // Verify that object was found
+  if(transObject != null)
+  {
+    if(transObject.Price != null)
+    {
+      if(transObject.Type == "WALKING" || transObject.Type === "BICYCLING")
+      {
+        str += transObject.Price + " calories"
+      }
+      else
+      {
+        str += "$" + transObject.Price
+      }
+    }
+    else
+    {
+      str = "N/A"
+    }
+  }
+  return str
+}
+
+// Convert duration to string for uber
 function addDurationToString(data, seconds)
 {
     var str = "";
@@ -268,18 +331,18 @@ function addDurationToString(data, seconds)
 function PopulateTable(durationData){
 
     document.getElementById("uberTime").innerHTML = -1;
-    document.getElementById("drivingTime").innerHTML = durationToString(durationData[0]);
+    document.getElementById("drivingTime").innerHTML = durationToString("DRIVING", durationData)
     saveDriveTime = durationData[0];
-    document.getElementById("walkingTime").innerHTML = durationToString(durationData[2]);
-    document.getElementById("busTime").innerHTML = durationToString(durationData[1]);
-    //document.getElementById("bikingTime").innerHTML = durationToString(durationData[3]);
+    document.getElementById("walkingTime").innerHTML = durationToString("WALKING", durationData)
+    document.getElementById("busTime").innerHTML = durationToString("TRANSIT", durationData)
+    document.getElementById("bikingTime").innerHTML = durationToString("BICYCLING", durationData)
 
 
 
-    document.getElementById("drivingCost").innerHTML = -1;
-    document.getElementById("walkingCost").innerHTML =
-        calc_calories_walking(convertToMin(durationData[2]));
-    document.getElementById("busCost").innerHTML = -1;
+    document.getElementById("drivingCost").innerHTML = priceToString("DRIVING", durationData)
+    document.getElementById("walkingCost").innerHTML = priceToString("WALKING", durationData)
+    document.getElementById("busCost").innerHTML = priceToString("TRANSIT", durationData)
+    document.getElementById("bikingCost").innerHTML = priceToString("BICYCLING", durationData)
 
 
 }
@@ -441,12 +504,12 @@ function bus_cost()
   if ((startlocation.lng() < -122.335783 && endlocation.lng() > -122.335783)
     || (startlocation.lng() > -122.335783 && endlocation.lng() < -122.335783)) 
   {
-    fare = Math.random() * 3 + 4
+    fare = Math.floor(Math.random() * 3 + 4)
   }
   return fare.toFixed(2)
 }
 
-// Caculate driving cost ; time_drive is minutes
+// Caculate driving cost ; time is minutes
 function driving_cost(time, distance) {
   var cost = (distance / 25) * 3.80;
   if (time > 25*60) {
@@ -461,12 +524,12 @@ function driving_cost(time, distance) {
 
 // Calculate calories burned from biking
 function calc_calories_biking(distance) {
-  return (distance * 42);
+  return Math.floor(distance * 42)
 }
 
 // Calculate calories burn from walking
 function calc_calories_walking(time) {
-  return (10 * (time/(4.184*60))).toFixed(2);
+  return Math.floor(10 * (time/(4.184*60)))
 }
 
 google.maps.event.addDomListener(window, 'load', initialize(GetLatLng()));
