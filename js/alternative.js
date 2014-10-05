@@ -3,7 +3,7 @@ var map;
 var startlocation;
 
 
-function initialize() {
+function initialize(callback) {
   geocoder = new google.maps.Geocoder();
   var latlng = new google.maps.LatLng(37.870758, -122.250421);
   var mapOptions = {
@@ -11,8 +11,8 @@ function initialize() {
     center: latlng
   }
   map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
-  GetLatLng();
-    console.log("initialize")
+  
+  callback
 }
 
 // centers the map but prints out lat/long to console
@@ -253,4 +253,4 @@ function driving_cost(distance, time_drive) {
   return cost
 }
 
-google.maps.event.addDomListener(window, 'load', initialize);
+google.maps.event.addDomListener(window, 'load', initialize(GetLatLng()));
