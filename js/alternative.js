@@ -1,5 +1,6 @@
 var geocoder;
 var map;
+var startlocation;
 
 
 function initialize() {
@@ -10,6 +11,8 @@ function initialize() {
     center: latlng
   }
   map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+  GetLatLng();
+    console.log("initialize")
 }
 
 // centers the map but prints out lat/long to console
@@ -30,11 +33,28 @@ function getLatLong() {
   });
 }
 
+function GetLatLng(){
+
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(showPosition);
+    } else {
+        alert("Geolocation is not supported by this browser.");
+    }
+
+
+    function showPosition(position) {
+        console.log("Latitude: " + position.coords.latitude +
+            "<br>Longitude: " + position.coords.longitude);
+
+        startlocation = new google.maps.LatLng(position.coords.latitude,
+            position.coords.longitude, false);
+    }
+
+}
+
 // Show direction from start to end
 function GetGoogleData(type, callback) {
 
-  //var startlocation = document.getElementById('Start').value
-  var startlocation = "3485 Farquhar Ave, Los Alamitos, CA"
   var endlocation = document.getElementById('geocomplete').value
 
   var map = new google.maps.Map(document.getElementById('map-canvas'), {
@@ -72,8 +92,10 @@ function GetGoogleData(type, callback) {
     var request = {
     origin: startlocation, 
     destination: endlocation,
-    travelMode: googleTransType
+    travelMode: googleTransType, 
+    transitOptions: {departureTime: new Date()}
     };
+
 
     directionsService.route(request, function(response, status) {
       if (status == google.maps.DirectionsStatus.OK) {

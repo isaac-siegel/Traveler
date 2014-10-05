@@ -35,13 +35,24 @@
     margin:0px auto; display:inline-block
 }
 
-#map-canvas {
-height: 200px;
-width : 50%;
-margin : auto;
-margin: 0px;
-padding: 0px
+#checkboxes {
+    width: 60%;
+    margin:0 auto;
+
 }
+
+#resultTable {
+    margin: 0 auto;
+}
+
+th{
+    font-size: 20px;
+}
+
+td {
+    padding: 15px;
+}
+
 
 /*@font-face {*/
     /*font-family: Bariol;*/
