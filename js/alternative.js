@@ -1,6 +1,7 @@
 var geocoder;
 var map;
 var startlocation;
+var endlocation;
 
 
 function initialize(callback) {
@@ -15,18 +16,17 @@ function initialize(callback) {
   callback
 }
 
-// centers the map but prints out lat/long to console
-function getLatLong() {
-  var address = document.getElementById('address').value;
+// Returns a wrapper with lat/long for address
+function ConvertToLatLgn(address, callback) {
   geocoder.geocode( { 'address': address}, function(results, status) {
     if (status == google.maps.GeocoderStatus.OK) {
-      map.setCenter(results[0].geometry.location);
+      var temp = {
+          'Lat' : results[0].geometry.location.lat(),
+          'Long' : results[0].geometry.location.lng()
+      }
+      callback(temp)
+      //callback(console.log(results[0].geometry.location.lat()))
       
-
-      // Display Lay/Lon
-      console.log(results[0].geometry.location.lat())
-      console.log(results[0].geometry.location.lng())
-
     } else {
       alert('Geocode was not successful for the following reason: ' + status);
     }
@@ -54,13 +54,9 @@ function GetLatLng(){
 
 // Show direction from start to end
 function GetGoogleData(type, callback) {
-
-  var endlocation = document.getElementById('geocomplete').value
-
   var map = new google.maps.Map(document.getElementById('map-canvas'), {
     mapTypeId: google.maps.MapTypeId.ROADMAP
   });
-
   var directionsService = new google.maps.DirectionsService();
   var directionsDisplay = new google.maps.DirectionsRenderer();
 
@@ -96,7 +92,6 @@ function GetGoogleData(type, callback) {
   transitOptions: {departureTime: new Date()}
   };
 
-
   directionsService.route(request, function(response, status) {
     if (status == google.maps.DirectionsStatus.OK) {
       directionsDisplay.setDirections(response);
@@ -131,11 +126,17 @@ function GetGoogleData(type, callback) {
           totalDistance += legs[i].distance.value
         }
 
-        var hrs = Math.floor(totalTime / 3600)
-        totalTime = totalTime % 3600
-        var mins = Math.floor(totalTime / 60)
-        totalTime = totalTime % 60
-        var secs = totalTime
+        // copy of total time to preserver total time's value
+        var time = totalTime
+
+        var hrs = Math.floor(time / 3600)
+        time = time % 3600
+        var mins = Math.floor(time / 60)
+        time = time % 60
+        var secs = time
+
+        // Convert meters to miles
+        var miles = ((totalDistance * 0.000621371).toFixed(2)/1)
 
         // Call the callback function when query is done
         callback({
@@ -145,7 +146,8 @@ function GetGoogleData(type, callback) {
           'Seconds' : secs,
           // convert meters -> miles and round 2 decimal values
           // to fixed returns a string and not a number
-          'Distance' : ((totalDistance * 0.000621371).toFixed(2)/1)
+          'Distance' : miles,
+          'Price' : ReturnPrice(type, totalTime, miles)
         })
       }
     }
@@ -156,7 +158,8 @@ function GetGoogleData(type, callback) {
           'Hours' : null, 
           'Minutes' : null,
           'Seconds' : null,
-          'Distance' : null
+          'Distance' : null,
+          'Price' : null
       })
     }
   });
@@ -200,10 +203,11 @@ function GetDuration()
   var transportationType = [google.maps.TravelMode.WALKING, 
     google.maps.TravelMode.DRIVING, google.maps.TravelMode.BICYCLING, 
     google.maps.TravelMode.TRANSIT]
-
-  for(var i = 0; i < transportationType.length; i++)
-    GetGoogleData(transportationType[i], function(data) {
-              durationData.push(data); 
+    ConvertToLatLgn(document.getElementById('geocomplete').value, function(LatLong){
+      endlocation = new google.maps.LatLng(LatLong.Lat, LatLong.Long) 
+        for(var i = 0; i < transportationType.length; i++)
+          GetGoogleData(transportationType[i], function(data) {
+              durationData.push(data);
               if(durationData.length == transportationType.length)
               {
                 // When all data is done, print it
@@ -212,6 +216,7 @@ function GetDuration()
                 console.log(jsonFile)
               }
           })
+    })
 
 }
 
@@ -241,16 +246,60 @@ function make_json(data) {
   return final;
 }
 
-// Caculat driving cost ; time_drive is minutes
-function driving_cost(distance, time_drive) {
+// Price calculator based on type of trans
+function ReturnPrice(type, time, distance)
+{
+  switch (type)
+  {
+    case google.maps.TravelMode.WALKING :
+      return calc_calories_walking(time)
+    case google.maps.TravelMode.DRIVING :
+      return driving_cost(time, distance)
+    case google.maps.TravelMode.BICYCLING :
+      return calc_calories_biking(distance)
+    case google.maps.TravelMode.TRANSIT :
+      return bus_cost()
+    default :
+      return "N/A" 
+      break;
+  }
+}
+
+// Calculate bus fare in the bay - 
+// if you cross this longitude
+function bus_cost()
+{
+  var fare = 2
+
+  if ((startlocation.lng() < -122.335783 && endlocation.lng() > -122.335783)
+    || (startlocation.lng() > -122.335783 && endlocation.lng() < -122.335783)) 
+  {
+    fare = Math.random() * 3 + 4
+  }
+  return fare.toFixed(2)
+}
+
+// Caculate driving cost ; time_drive is minutes
+function driving_cost(time, distance) {
   var cost = (distance / 25) * 3.80;
-  if (time_drive > 25) {
-    cost += time_drive * 0.05
+  if (time > 25*60) {
+    cost += (time/60) * 0.05
   }
   else {
-    cost += time_drive * 0.1
+    cost += (time/60) * 0.1
   }
-  return cost
+
+  return cost.toFixed(2)
+}
+
+// Calculate calories burned from biking
+function calc_calories_biking(distance) {
+  return (distance * 42);
+}
+
+// Calculate calories burn from walking
+function calc_calories_walking(time) {
+  return (10 * (time/(4.184*60))).toFixed(2);
 }
 
 google.maps.event.addDomListener(window, 'load', initialize(GetLatLng()));
