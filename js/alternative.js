@@ -136,7 +136,8 @@ function GetGoogleData(type, callback) {
         time = time % 60
         var secs = time
 
-        // Convert meters to miles
+        // convert meters -> miles and round 2 decimal values
+        // to fixed returns a string and not a number
         var miles = ((totalDistance * 0.000621371).toFixed(2)/1)
 
         // Call the callback function when query is done
@@ -145,10 +146,9 @@ function GetGoogleData(type, callback) {
           'Hours' : hrs, 
           'Minutes' : mins,
           'Seconds' : secs,
-          // convert meters -> miles and round 2 decimal values
-          // to fixed returns a string and not a number
           'Distance' : miles,
-          'Price' : ReturnPrice(type, totalTime, miles)
+          'Price' : ReturnPrice(type, totalTime, miles),
+          'ETA' : totalTime
         })
       }
     }
@@ -160,13 +160,14 @@ function GetGoogleData(type, callback) {
           'Minutes' : null,
           'Seconds' : null,
           'Distance' : null,
-          'Price' : null
+          'Price' : null,
+          'ETA' : null
       })
     }
   });
 }
 
-function GetDuration()
+function GetDuration(callback)
 {
   var durationData = []
     //getDataUber()
@@ -218,14 +219,14 @@ function GetDuration()
               {
                 // When all data is done, print it
                 alertUser(durationData)
+
+                getDataUber(startlocation.lat(), startlocation.lng(),
+                    endlocation.lat(), endlocation.lng(), durationData);
+
+
                 var jsonFile = make_json(durationData)
-
-
                 console.log(jsonFile)
-
-                  getDataUber(startlocation.lat(), startlocation.lng(),
-                      endlocation.lat(), endlocation.lng());
-
+                callback(jsonFile)
               }
           })
     })
@@ -347,24 +348,42 @@ function PopulateTable(durationData){
 
 }
 
+// When Priority Speed button is clicked
 function PrioritySpeed(){
-    GetDuration();
-//    if (obj.walk.eta < 600) highlight(2);
-//    else if (obj.bike.eta < obj.car.eta + 200 && obj.bike.eta < obj.uber.time)
-//      highlight(4)
-//    else if (obj.bike.eta > obj.car.eta + 200 && obj.car.eta + 180< obj.uber.time)
-//      highlight(3)
-//    else if (obj.bus.eta < obj.uber.time) highlight(1);
-//    else highlight(0);
+    GetDuration(
+      function(data)
+      {
+        console.log("JSON: " + obj)
+        if (obj.WALKING.ETA < 600) highlight(2);
+        else if (obj.BICYCLING.ETA < obj.DRIVING.ETA + 200 && obj.BICYCLING.ETA < obj.UBER.time)
+          highlight(4)
+        else if (obj.BICYCLING.ETA > obj.DRIVING.ETA + 200 && obj.DRIVING.ETA + 180< obj.UBER.time)
+          highlight(3)
+        else if (obj.TRANSIT.ETA < obj.UBER.time) highlight(1);
+        else highlight(0);
+      }
+    )
+
 }
 
+// When Priority Money button is clicked
 function PriorityMoney(){
-    GetDuration();
-//    if (obj.walk.eta < 300) highlight(2);
-//    if (obj.bike.eta < 700) highlight(4);
-//    highlight(3)
+    GetDuration(
+      function(obj){
+        if (obj.WALKING.ETA < 300) highlight(2);
+        else if (obj.BICYCLING.ETA < 700) highlight(4);
+        else
+          highlight(3)
+      }
+    )
+}
 
 
+function highlight(rowNumber) {
+    //TODO: highlight the specific part
+    // of the ending results table
+
+    console.log(rowNumber)
 
 }
 
@@ -386,7 +405,7 @@ function parseUberPrice(arr)
     document.getElementById("uberCost").innerHTML = arr.split('"')[1];
 }
 
-function getDataUber(start_lat, start_long, end_lat, end_long) {
+function getDataUber(start_lat, start_long, end_lat, end_long, durationData) {
 
     //var url = 'http://api.micahbenn.com/uber.php?startLat=33.84157&startLong=-117.46965&endLat=33.850571&endLong=-118.364241';
     var url = 'http://api.micahbenn.com/uber.php?startLat=';
@@ -396,57 +415,58 @@ function getDataUber(start_lat, start_long, end_lat, end_long) {
 
     //alert('url is: '+ url);
 
-    console.log(url);
+    //console.log(url);
+
+    // price, time
+    var price = null;
+    var time = null;
+    var uberObject = 
+      {
+        'Type' : "UBER",
+        'Hours' : null, 
+        'Minutes' : null,
+        'Seconds' : null,
+        'Distance' : null,
+        'Price' : null,
+        'ETA' : null
+      }
 
     $.get(url, function(data){
-        console.log('data is: ' + data);
-        parseUberPrice(data);
-
+        //console.log('data is: ' + data);
+        //parseUberPrice(data);
+        price = data.split('"')[1]
     });
 
     url += "&type=time";
     $.get(url, function(data){
-        console.log('data is: ' + data);
+        //console.log('data is: ' + data);
         var processed = data.substring(1,data.length);
         processed = processed.split(',')[0];
-        processed = addDurationToString(saveDriveTime,processed);
-        document.getElementById("uberTime").innerHTML = processed;
-
+        //processed = addDurationToString(saveDriveTime,processed);
+        //document.getElementById("uberTime").innerHTML = processed;)
+        uberObject.ETA = parseInt(processed) + parseInt(saveDriveTime.ETA)
+        AddTime(uberObject, (parseInt(processed) + parseInt(saveDriveTime.ETA)))
+        uberObject.Price = price
     });
+
+    durationData.push(uberObject)
+}
+
+// Quickly parse hours, mins, and seconds for an object 
+// when given a time
+function AddTime(data, totalSeconds)
+{
+  var time = totalSeconds
+  data.Hours = Math.floor(time / 3600)
+  time = time % 3600
+  data.Minutes = Math.floor(time / 60)
+  time = time % 60
+  data.Seconds = time
 }
 
 $(document).ready(function(){
    // getDataUber(37.775818,-122.418028,0,0);
 });
-
-
-
-function PrioritySpeed(){
-    GetDuration();
-    if (obj.walk.eta < 600) highlight(2);
-    else if (obj.bike.eta < obj.car.eta + 200 && obj.bike.eta < obj.uber.time) 
-      highlight(4)
-    else if (obj.bike.eta > obj.car.eta + 200 && obj.car.eta + 180< obj.uber.time)
-      highlight(3)
-    else if (obj.bus.eta < obj.uber.time) highlight(1);
-    else highlight(0);
-}
-
-function PriorityMoney(){
-    GetDuration();
-    if (obj.walk.eta < 300) highlight(2);
-    if (obj.bike.eta < 700) highlight(4);
-    highlight(3)
-
-
-}
-
-function highlight(rowNumber) {
-    //TODO: highlight the specific part
-    // of the ending results table
-
-}
-
 
 // print out all the data
 function alertUser(durationData)
