@@ -172,6 +172,9 @@ function GetDuration()
                 alertUser(durationData)
                 var jsonFile = make_json(durationData)
                 console.log(jsonFile)
+
+                //Populate table
+                  PopulateTable(durationData);
               }
           })
         }
@@ -186,6 +189,45 @@ function GetDuration()
           })
         }
   }
+}
+
+function durationToString(data)
+{
+    var str = "";
+    if(data.Hours > 0 && data != null)
+    {
+        str += data.Hours + "hrs";
+    }
+    if(data.Minutes > 0 && data !=null)
+    {
+        str += " " + data.Minutes + "mins";
+    }
+    return str;
+
+}
+
+
+function PopulateTable(durationData){
+    console.log("hello");
+    document.getElementById("uberTime").innerHTML = -1;
+    document.getElementById("drivingTime").innerHTML = durationToString(durationData[0]);
+    document.getElementById("walkingTime").innerHTML = durationToString(durationData[2]);
+    document.getElementById("busTime").innerHTML = durationToString(durationData[1]);
+    document.getElementById("bikingTime").innerHTML = durationToString(durationData[3]);
+
+
+
+    document.getElementById("uberCost").innerHTML = -1;
+    document.getElementById("drivingCost").innerHTML = -1;
+    document.getElementById("walkingCost").innerHTML = -1;
+    document.getElementById("busCost").innerHTML = -1;
+
+
+
+    console.log("hi");
+
+
+
 }
 
 // print out all the data
